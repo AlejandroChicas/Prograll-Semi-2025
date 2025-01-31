@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">miPrimeraAplicacion</string>
     <string name="Hola">Hola Mundo</string>
+    <string name="calcular">Calcular</string>
+    <string name="divisi_n">División</string>
 </resources>
