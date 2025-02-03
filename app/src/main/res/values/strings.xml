@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">miPrimeraAplicacion</string>
-    <string name="Hola">Hola Mundo</string>
-    <string name="calcular">Calcular</string>
-    <string name="divisi_n">División</string>
+    <string-array name="opciones">
+        <item>Suma</item>
+        <item>Resta</item>
+        <item>Multiplicacion</item>
+        <item>Division</item>
+    </string-array>
 </resources>
