@@ -2,6 +2,7 @@ package com.ugb.miprimeraaplicacion;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,50 +26,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     TextView tempVal;
-    LocationManager locationManager;
-    LocationListener locationListener;
+    Button btn;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tempVal = findViewById(R.id.lblSensorGps);
-        obtenerPosicion();
+        tempVal = findViewById(R.id.lblReproductoMusica);
+        reproductorMusca();
     }
-    void obtenerPosicion(){
-        try{
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != getPackageManager().PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != getPackageManager().PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                tempVal.setText("Solicitando permisos de ubicación...");
-            }
 
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    mostrarUbicacion(location);
-                }
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                    tempVal.setText("Estado del proveedor: "+ status);
-                }
-                @Override
-                public void onProviderEnabled(String provider) {
-                    tempVal.setText("Proveedor habilitado: "+ provider);
-                }
-                @Override
-                public void onProviderDisabled(String provider) {
-                    tempVal.setText("Proveedor deshabilitado: "+ provider);
-                }
-            };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }catch (SecurityException e){
-            tempVal.setText("Error al obtener la ubicación: "+ e.getMessage());
-        }
-    }
-    void mostrarUbicacion(Location location){
-        tempVal.setText("Latitud: "+ location.getLatitude() + "\nLongitud: "+ location.getLongitude() + "\nAltitud: "+ location.getAltitude());
+    void reproductorMusca(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.audio);
+        mediaPlayer.start();
     }
 }
 
