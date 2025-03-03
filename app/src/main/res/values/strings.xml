@@ -1,12 +1,3 @@
 <resources>
-    <string name="app_name">Miprimeraaplicacion</string>
-    <string-array name="spnArea">
-        <item>Pie Cuadrado</item>
-        <item>Vara Cuadrada</item>
-        <item>Yarda Cuadrada</item>
-        <item>Metro Cuadrado</item>
-        <item>Tarea</item>
-        <item>Manzana (Salvadoreña)</item>
-        <item>Hectáreas</item>
-    </string-array>
+    <string name="app_name">Agenda</string>
 </resources>
