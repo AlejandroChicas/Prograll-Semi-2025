@@ -48,6 +48,7 @@ public class DB extends SQLiteOpenHelper {
             return mensaje;
             //Excepción
         } catch (Exception e) {
+
             return e.getMessage();
         }
 
