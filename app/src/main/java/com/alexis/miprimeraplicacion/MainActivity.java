@@ -2,9 +2,6 @@ package com.alexis.miprimeraplicacion;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tempVal;
     DB db;
     //Acción nuevo para crear un nuevo registro
-    String accion = "nuevo", idAmigo = "";
-    String mostrarMsg(String msg){;
+    String accion = "nuevo", idProducto = "";
+    String mostrarMsg(String msg){
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
         return msg;
     }
@@ -46,18 +43,18 @@ public class MainActivity extends AppCompatActivity {
             accion = parametros.getString("accion");
             if(accion.equals("modificar")){
                 //Recuperamos los datos del amigo
-                JSONObject datos = new JSONObject(parametros.getString("amigos"));
-                idAmigo = datos.getString("idAmigo");
+                JSONObject datos = new JSONObject(parametros.getString("productos"));
+                idProducto = datos.getString("idProducto");
                 tempVal = findViewById(R.id.txtNombre);
-                tempVal.setText(datos.getString("nombre"));
+                tempVal.setText(datos.getString("codigo"));
                 tempVal = findViewById(R.id.txtDireccion);
-                tempVal.setText(datos.getString("direccion"));
+                tempVal.setText(datos.getString("descripcion"));
                 tempVal = findViewById(R.id.txtTelefono);
-                tempVal.setText(datos.getString("telefono"));
+                tempVal.setText(datos.getString("marca"));
                 tempVal = findViewById(R.id.txtEmail);
-                tempVal.setText(datos.getString("email"));
+                tempVal.setText(datos.getString("presentacion"));
                 tempVal = findViewById(R.id.txtDui);
-                tempVal.setText(datos.getString("dui"));}
+                tempVal.setText(datos.getString("precio"));}
         }
         catch (Exception e){
             mostrarMsg("Error: " + e.getMessage());

@@ -33,13 +33,13 @@ import java.util.zip.Inflater;
 public class lista_amigos extends Activity {
     Bundle parametros = new Bundle();
     ListView ltsAmigos;
-    Cursor cAmigos;
+    Cursor cProductos;
     DB db;
-    final ArrayList<amigos> alAmigos = new ArrayList<amigos>();
-    final ArrayList<amigos> alAmigosCopia = new ArrayList<amigos>();
+    final ArrayList<productos> alProductos = new ArrayList<productos>();
+    final ArrayList<productos> alProductosCopia = new ArrayList<productos>();
     JSONArray jsonArray;
     JSONObject jsonObject;
-    amigos misAmigos;
+    productos misProductos;
     FloatingActionButton fab;
     int posicion = 0;
     @Override
@@ -81,7 +81,7 @@ public class lista_amigos extends Activity {
             //Si el item seleccionado es igual a Modificar
             }else if (item.getItemId() == R.id.mnxModificar){
                 parametros.putString("accion","modificar");
-                parametros.putString("amigos", jsonArray.getJSONObject(posicion).toString());
+                parametros.putString("productos", jsonArray.getJSONObject(posicion).toString());
                 abriVentana();
             }else if (item.getItemId() == R.id.mnxEliminar){
                 //Eliminar amigo
@@ -106,28 +106,28 @@ public class lista_amigos extends Activity {
     //Obtiene los datos de los amigos
     private void obtenerDatosAmigos(){
         try{
-            cAmigos = db.lista_amigos();
+            cProductos = db.lista_amigos();
             //Si hay datos en la tabla
-            if(cAmigos.moveToFirst()){//move to first es para moverse entre los datos
+            if(cProductos.moveToFirst()){//move to first es para moverse entre los datos
                 jsonArray = new JSONArray();//Array de objetos se pasan a un JSON
                 do{
                     jsonObject = new JSONObject();
-                    jsonObject.put("idAmigo", cAmigos.getString(0));
-                    jsonObject.put("nombre", cAmigos.getString(1));
-                    jsonObject.put("direccion", cAmigos.getString(2));
-                    jsonObject.put("telefono", cAmigos.getString(3));
-                    jsonObject.put("email", cAmigos.getString(4));
-                    jsonObject.put("dui", cAmigos.getString(5));
-                    jsonObject.put("foto", cAmigos.getString(6));
+                    jsonObject.put("idProducto", cProductos.getString(0));
+                    jsonObject.put("codigo", cProductos.getString(1));
+                    jsonObject.put("descripcion", cProductos.getString(2));
+                    jsonObject.put("marca", cProductos.getString(3));
+                    jsonObject.put("presentacion", cProductos.getString(4));
+                    jsonObject.put("precio", cProductos.getString(5));
+                    jsonObject.put("foto", cProductos.getString(6));
                     jsonArray.put(jsonObject);
-                }while(cAmigos.moveToNext());
+                }while(cProductos.moveToNext());
                 mostrarDatosAmigos();
             }else{
-                mostrarMsg("No hay amigos registrados.");
+                mostrarMsg("No hay productos registrados.");
                 abriVentana();
             }
         }catch (Exception e){
-            mostrarMsg("Error: " + e.getMessage());
+            mostrarMsg("Error: UNO" + e.getMessage());
         }
     }
     //Muestra los datos de los amigos
@@ -135,27 +135,27 @@ public class lista_amigos extends Activity {
         try{
             if(jsonArray.length()>0){
                 ltsAmigos = findViewById(R.id.ltsAmigos);
-                alAmigos.clear();
-                alAmigosCopia.clear();
+                alProductos.clear();
+                alProductosCopia.clear();
 
                 for (int i=0; i<jsonArray.length(); i++){
                     jsonObject = jsonArray.getJSONObject(i);
-                    misAmigos = new amigos(
-                            jsonObject.getString("idAmigo"),
-                            jsonObject.getString("nombre"),
-                            jsonObject.getString("direccion"),
-                            jsonObject.getString("telefono"),
-                            jsonObject.getString("email"),
-                            jsonObject.getString("dui"),
+                    misProductos = new productos(
+                            jsonObject.getString("idProducto"),
+                            jsonObject.getString("codigo"),
+                            jsonObject.getString("descripcion"),
+                            jsonObject.getString("marca"),
+                            jsonObject.getString("presentacion"),
+                            jsonObject.getString("precio"),
                             jsonObject.getString("foto")
                     );
-                    alAmigos.add(misAmigos);
+                    alProductos.add(misProductos);
                 }
-                alAmigosCopia.addAll(alAmigos);
-                ltsAmigos.setAdapter(new AdaptadorAmigos(this, alAmigos));
+                alProductosCopia.addAll(alProductos);
+                ltsAmigos.setAdapter(new AdaptadorAmigos(this, alProductos));
                 registerForContextMenu(ltsAmigos);
             }else{
-                mostrarMsg("No hay amigos registrados.");
+                mostrarMsg("No hay productos registrados.");
                 abriVentana();
             }
         }catch (Exception e){
@@ -175,22 +175,22 @@ public class lista_amigos extends Activity {
             //Durante
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                alAmigos.clear();
+                alProductos.clear();
                 String buscar = tempVal.getText().toString().trim().toLowerCase();
                 if( buscar.length()<=0){
-                    alAmigos.addAll(alAmigosCopia);
+                    alProductos.addAll(alProductosCopia);
                 }else{
-                    for (amigos item: alAmigosCopia){
+                    for (productos item: alProductosCopia){
                         //item.get obtiene el valor de la posicion del array, toLowerCase convierte el valor a minusculas
                         //contains verifica si el valor contiene la cadena de texto
-                        if(item.getNombre().toLowerCase().contains(buscar) ||
-                                item.getDui().toLowerCase().contains(buscar) ||
-                                item.getEmail().toLowerCase().contains(buscar)){
+                        if(item.getCodigo().toLowerCase().contains(buscar) ||
+                                item.getDescripcion().toLowerCase().contains(buscar) ||
+                                item.getMarca().toLowerCase().contains(buscar)){
                             //Si cumple la condicion se agrega al array
-                            alAmigos.add(item);
+                            alProductos.add(item);
                         }
                     }
-                    ltsAmigos.setAdapter(new AdaptadorAmigos(getApplicationContext(), alAmigos));
+                    ltsAmigos.setAdapter(new AdaptadorAmigos(getApplicationContext(), alProductos));
                 }
             }
             //Despues
