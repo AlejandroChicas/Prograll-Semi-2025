@@ -10,13 +10,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class AdaptadorAmigos extends BaseAdapter {
+public class AdaptadorProductos extends BaseAdapter {
     Context context;
     ArrayList<productos> alProductos;
     productos misProductos;
     LayoutInflater inflater;
 
-    public AdaptadorAmigos(Context context, ArrayList<productos> alProductos) {
+    public AdaptadorProductos(Context context, ArrayList<productos> alProductos) {
         this.context = context;
         this.alProductos = alProductos;
     }
@@ -47,14 +47,23 @@ public class AdaptadorAmigos extends BaseAdapter {
         try {
             misProductos = alProductos.get(position);
 
-            TextView tempVal = itemView.findViewById(R.id.lblNombreAdaptador);
+            TextView tempVal = itemView.findViewById(R.id.lblCodigoAdaptador);
             tempVal.setText(misProductos.getCodigo());
 
-            tempVal = itemView.findViewById(R.id.lblTelefonoAdaptador);
+            tempVal = itemView.findViewById(R.id.lblDescripcionAdaptador);
             tempVal.setText(misProductos.getDescripcion());
 
-            tempVal = itemView.findViewById(R.id.lblEmailAdaptador);
+            tempVal = itemView.findViewById(R.id.lblMarcaAdaptador);
+            tempVal.setText(misProductos.getMarca());
+
+            tempVal = itemView.findViewById(R.id.lblPresentacionAdaptador);
             tempVal.setText(misProductos.getpresentacion());
+
+            tempVal = itemView.findViewById(R.id.lblPrecioAdaptador);
+            tempVal.setText(misProductos.getprecio());
+
+
+
         } catch (Exception e) {
             Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }

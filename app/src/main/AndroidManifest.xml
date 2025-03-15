@@ -18,7 +18,7 @@
             android:exported="true" />
         <!--Esta ventana se abrira al iniciar la aplicacion-->
         <activity
-            android:name=".lista_amigos"
+            android:name=".lista_productos"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

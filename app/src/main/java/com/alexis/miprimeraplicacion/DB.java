@@ -27,7 +27,7 @@ public class DB extends SQLiteOpenHelper {
         //Actualizar la estrucutra de la base de datos si es necesario
     }
     //Métodos para administrar la base de datos
-    public String administrar_amigos(String accion, String[] datos) {
+    public String administrar_productos(String accion, String[] datos) {
         try{
             //Escritura en la base de datos
             SQLiteDatabase db = getWritableDatabase();
@@ -54,7 +54,7 @@ public class DB extends SQLiteOpenHelper {
         }
 
     }
-    public Cursor lista_amigos(){
+    public Cursor lista_productos(){
         //bd es el ejecutador de consultas
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery("SELECT * FROM productos", null);

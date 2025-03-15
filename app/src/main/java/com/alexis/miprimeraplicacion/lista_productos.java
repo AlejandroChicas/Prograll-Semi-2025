@@ -15,12 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -28,11 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
-public class lista_amigos extends Activity {
+public class lista_productos extends Activity {
     Bundle parametros = new Bundle();
-    ListView ltsAmigos;
+    ListView ltsProductos;
     Cursor cProductos;
     DB db;
     final ArrayList<productos> alProductos = new ArrayList<productos>();
@@ -45,15 +39,16 @@ public class lista_amigos extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_amigos);
+        setContentView(R.layout.activity_lista_productos);
         parametros.putString("accion","nuevo");
 
         db = new DB(this);
 
-        fab = findViewById(R.id.fabAgregarAmigo);
+       // fab = findViewById(R.id.fabAgregarProducto);
+        fab = findViewById(R.id.fabAgregarProductos);
         fab.setOnClickListener(view -> abriVentana());
-        obtenerDatosAmigos();
-        buscarAmigos();
+        obtenerDatosProductos();
+        buscarProductos();
     }
 
     //Metodos agregados
@@ -65,7 +60,8 @@ public class lista_amigos extends Activity {
         try {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             posicion = info.position;
-            menu.setHeaderTitle(jsonArray.getJSONObject(posicion).getString("nombre"));
+            //menu.setHeaderTitle(jsonArray.getJSONObject(posicion).getString("nombre"));
+            menu.setHeaderTitle(jsonArray.getJSONObject(posicion).getString("codigo"));
         } catch (Exception e) {
             mostrarMsg("Error: " + e.getMessage());
         }
@@ -85,6 +81,9 @@ public class lista_amigos extends Activity {
                 abriVentana();
             }else if (item.getItemId() == R.id.mnxEliminar){
                 //Eliminar amigo
+                parametros.putString("accion","eliminar");
+                parametros.putString("productos", jsonArray.getJSONObject(posicion).toString());
+                //guardarProducto();
             }
             return true;
         }catch (Exception e){
@@ -104,9 +103,9 @@ public class lista_amigos extends Activity {
     }
 
     //Obtiene los datos de los amigos
-    private void obtenerDatosAmigos(){
+    private void obtenerDatosProductos(){
         try{
-            cProductos = db.lista_amigos();
+            cProductos = db.lista_productos();
             //Si hay datos en la tabla
             if(cProductos.moveToFirst()){//move to first es para moverse entre los datos
                 jsonArray = new JSONArray();//Array de objetos se pasan a un JSON
@@ -121,7 +120,7 @@ public class lista_amigos extends Activity {
                     jsonObject.put("foto", cProductos.getString(6));
                     jsonArray.put(jsonObject);
                 }while(cProductos.moveToNext());
-                mostrarDatosAmigos();
+                mostrarDatosProductos();
             }else{
                 mostrarMsg("No hay productos registrados.");
                 abriVentana();
@@ -131,10 +130,10 @@ public class lista_amigos extends Activity {
         }
     }
     //Muestra los datos de los amigos
-    private void mostrarDatosAmigos(){
+    private void mostrarDatosProductos(){
         try{
             if(jsonArray.length()>0){
-                ltsAmigos = findViewById(R.id.ltsAmigos);
+                ltsProductos = findViewById(R.id.ltsProductos);
                 alProductos.clear();
                 alProductosCopia.clear();
 
@@ -152,8 +151,8 @@ public class lista_amigos extends Activity {
                     alProductos.add(misProductos);
                 }
                 alProductosCopia.addAll(alProductos);
-                ltsAmigos.setAdapter(new AdaptadorAmigos(this, alProductos));
-                registerForContextMenu(ltsAmigos);
+                ltsProductos.setAdapter(new AdaptadorProductos(this, alProductos));
+                registerForContextMenu(ltsProductos);
             }else{
                 mostrarMsg("No hay productos registrados.");
                 abriVentana();
@@ -163,8 +162,8 @@ public class lista_amigos extends Activity {
         }
     }
     //Busca los amigos
-    private void buscarAmigos(){
-        TextView tempVal = findViewById(R.id.txtBuscarAmigos);
+    private void buscarProductos(){
+        TextView tempVal = findViewById(R.id.txtBuscarProductos);
         tempVal.addTextChangedListener(new TextWatcher() {
             //TexWatcher
             //Antes
@@ -190,7 +189,7 @@ public class lista_amigos extends Activity {
                             alProductos.add(item);
                         }
                     }
-                    ltsAmigos.setAdapter(new AdaptadorAmigos(getApplicationContext(), alProductos));
+                    ltsProductos.setAdapter(new AdaptadorProductos(getApplicationContext(), alProductos));
                 }
             }
             //Despues

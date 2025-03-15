@@ -18,13 +18,13 @@ public class productos {
         this.precio = precio;
         this.foto = foto;
     }
-
+//amigo
     public String getIdProducto() {
         return idProducto;
     }
 
-    public void setIdProducto(String idAmigo) {
-        this.idProducto = idAmigo;
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
     }
 
     public String getCodigo() {
