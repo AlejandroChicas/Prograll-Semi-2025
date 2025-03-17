@@ -9,6 +9,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class AdaptadorProductos extends BaseAdapter {
     Context context;
@@ -61,6 +73,10 @@ public class AdaptadorProductos extends BaseAdapter {
 
             tempVal = itemView.findViewById(R.id.lblPrecioAdaptador);
             tempVal.setText(misProductos.getprecio());
+
+            ImageView img = itemView.findViewById(R.id.imgFotoAdaptador);
+            Bitmap bitmap = BitmapFactory.decodeFile(misProductos.getFoto());
+            img.setImageBitmap(bitmap);
 
 
 
