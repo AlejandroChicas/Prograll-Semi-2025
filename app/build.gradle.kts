@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.alexis.miprimeraplicacion"
+    namespace = "com.ugb.miprimeraplicacion"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.alexis.miprimeraplicacion"
+        applicationId = "com.ugb.miprimeraplicacion"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

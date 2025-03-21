@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.alexis.miprimeraplicacion.fileprovider"
+            android:authorities="com.ugb.miPrimerAplicacion.fileprovider"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
