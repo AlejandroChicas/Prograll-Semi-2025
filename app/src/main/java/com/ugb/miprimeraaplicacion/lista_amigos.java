@@ -42,31 +42,22 @@ public class lista_amigos extends Activity {
     JSONObject jsonObject;
     amigos misAmigos;
     FloatingActionButton fab;
-
-
-
     int posicion = 0;
-
-
-
-
+    obtenerDatosServidor datosServidor;
+    detectarInternet di;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_amigos);
 
         parametros.putString("accion", "nuevo");
-
         db = new DB(this);
 
         fab = findViewById(R.id.fabAgregarAmigo);
         fab.setOnClickListener(view -> abriVentana());
-        obtenerDatosAmigos();
+        listarDatos();
         buscarAmigos();
     }
-
-
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -80,35 +71,24 @@ public class lista_amigos extends Activity {
             mostrarMsg("Error: " + e.getMessage());
         }
     }
-
-
-
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         try{
-            if (item.getItemId()==R.id.mnxNuevo){
-                    abriVentana();
-
-            }else if (item.getItemId()==R.id.mnxModifica){
-                    parametros.putString("accion", "modificar");
-                    parametros.putString("amigos", jsonArray.getJSONObject(posicion).toString());
-                    abriVentana();
-
-            }else if (item.getItemId()==R.id.mnxEliminar){
+            if( item.getItemId()==R.id.mnxNuevo){
+                abriVentana();
+            }else if( item.getItemId()==R.id.mnxModifica){
+                parametros.putString("accion", "modificar");
+                parametros.putString("amigos", jsonArray.getJSONObject(posicion).toString());
+                abriVentana();
+            } else if (item.getItemId()==R.id.mnxEliminar) {
                 eliminarAmigo();
-
             }
             return true;
-
         }catch (Exception e){
-            mostrarMsg("Error:"+ e.getMessage());
+            mostrarMsg("Error: " + e.getMessage());
+            return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
     }
-
-
-
-
     private void eliminarAmigo(){
         try{
             String nombre = jsonArray.getJSONObject(posicion).getString("nombre");
@@ -136,14 +116,26 @@ public class lista_amigos extends Activity {
             mostrarMsg("Error: " + e.getMessage());
         }
     }
-
-
-
-
-
     private void abriVentana(){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtras(parametros);
         startActivity(intent);
+    }
+    private void listarDatos(){
+        try{
+            di = new detectarInternet(this);
+            if(di.hayConexionInternet()){//online
+                datosServidor = new obtenerDatosServidor();
+                String respuesta = datosServidor.execute().get();
+                jsonObject = new JSONObject(respuesta);
+                jsonArray = jsonObject.getJSONArray("rows");
+                mostrarDatosAmigos();
+            }else{//offline
+                obtenerDatosAmigos();
+            }
+        }catch (Exception e){
+            mostrarMsg("Error: " + e.getMessage());
+        }
     }
     private void obtenerDatosAmigos(){
         try{
@@ -178,7 +170,7 @@ public class lista_amigos extends Activity {
                 alAmigosCopia.clear();
 
                 for (int i=0; i<jsonArray.length(); i++){
-                    jsonObject = jsonArray.getJSONObject(i);
+                    jsonObject = jsonArray.getJSONObject(i).getJSONObject("value");
                     misAmigos = new amigos(
                             jsonObject.getString("idAmigo"),
                             jsonObject.getString("nombre"),
@@ -231,7 +223,7 @@ public class lista_amigos extends Activity {
             }
         });
     }
-    private void mostrarMsg(String msg){
+    private void mostrarMsg(String msg)
+    {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
-}
