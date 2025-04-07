@@ -92,7 +92,6 @@ public class lista_amigos extends Activity {
 
 
 
-
     private void eliminarAmigo(){
         try{
             String nombre = jsonArray.getJSONObject(posicion).getJSONObject("value").getString("nombre");
@@ -106,20 +105,20 @@ public class lista_amigos extends Activity {
                         JSONObject datosAmigos = new JSONObject();
                         String _id = jsonArray.getJSONObject(posicion).getJSONObject("value").getString("_id");
                         String _rev = jsonArray.getJSONObject(posicion).getJSONObject("value").getString("_rev");
-                        String url = utilidades.url_consulta + "/" + _id + "?rev=" + _rev;
+                        String url = utilidades.url_mto + "/" + _id + "?rev=" + _rev;
                         enviarDatosServidor objEnviarDatosServidor = new enviarDatosServidor(this);
                         String respuesta = objEnviarDatosServidor.execute(datosAmigos.toString(), "DELETE", url).get();
                         JSONObject respuestaJSON = new JSONObject(respuesta);
-                        if (respuestaJSON.getBoolean("ok")){
-                            obtenerDatosAmigos();
-                            mostrarMsg("Registro eliminado con exito");
-                        }else {
+                        if(!respuestaJSON.getBoolean("ok")) {
+
+
+
                             mostrarMsg("Error: " + respuesta);
                         }
                     }
                     String respuesta = db.administrar_amigos("eliminar", new String[]{jsonArray.getJSONObject(posicion).getJSONObject("value").getString("idAmigo")});
                     if(respuesta.equals("ok")) {
-                        obtenerDatosAmigos();
+                        listarDatos();
                         mostrarMsg("Registro eliminado con exito");
                     }else{
                         mostrarMsg("Error: " + respuesta);
@@ -136,6 +135,9 @@ public class lista_amigos extends Activity {
             mostrarMsg("Error: " + e.getMessage());
         }
     }
+
+
+
 
 
     private void abriVentana(){
