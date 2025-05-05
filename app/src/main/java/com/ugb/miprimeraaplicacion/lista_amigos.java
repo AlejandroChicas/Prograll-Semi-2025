@@ -15,22 +15,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
 public class lista_amigos extends Activity {
     Bundle parametros = new Bundle();
     ListView ltsAmigos;
@@ -69,14 +63,12 @@ public class lista_amigos extends Activity {
             mostrarMsg("Error: " + e.getMessage());
         }
     }
-
-
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         try{
             if( item.getItemId()==R.id.mnxNuevo){
                 abriVentana();
-            }else if( item.getItemId()==R.id.mnxModifica){
+            }else if( item.getItemId()==R.id.mnxModificar){
                 parametros.putString("accion", "modificar");
                 parametros.putString("amigos", jsonArray.getJSONObject(posicion).getJSONObject("value").toString());
                 abriVentana();
@@ -89,9 +81,6 @@ public class lista_amigos extends Activity {
             return super.onContextItemSelected(item);
         }
     }
-
-
-
     private void eliminarAmigo(){
         try{
             String nombre = jsonArray.getJSONObject(posicion).getJSONObject("value").getString("nombre");
@@ -110,9 +99,6 @@ public class lista_amigos extends Activity {
                         String respuesta = objEnviarDatosServidor.execute(datosAmigos.toString(), "DELETE", url).get();
                         JSONObject respuestaJSON = new JSONObject(respuesta);
                         if(!respuestaJSON.getBoolean("ok")) {
-
-
-
                             mostrarMsg("Error: " + respuesta);
                         }
                     }
@@ -135,11 +121,6 @@ public class lista_amigos extends Activity {
             mostrarMsg("Error: " + e.getMessage());
         }
     }
-
-
-
-
-
     private void abriVentana(){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtras(parametros);
@@ -201,7 +182,8 @@ public class lista_amigos extends Activity {
                             jsonObject.getString("telefono"),
                             jsonObject.getString("email"),
                             jsonObject.getString("dui"),
-                            jsonObject.getString("urlFoto")
+                            jsonObject.getString("urlFoto"),
+                            jsonObject.getString("miToken")
                     );
                     alAmigos.add(misAmigos);
                 }
