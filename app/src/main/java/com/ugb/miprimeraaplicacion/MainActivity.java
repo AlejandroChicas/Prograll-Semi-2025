@@ -16,15 +16,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tempVal;
     String accion = "nuevo", idAmigo = "", id="", rev="";
     ImageView img;
-    String urlCompletaFoto = "";
+    String urlCompletaFoto = "", getUrlCompletaFotoFirestore = "";
     Intent tomarFotoIntent;
     detectarInternet di;
     DatabaseReference databaseReference;
@@ -43,17 +44,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         obtenerToken();
         img = findViewById(R.id.imgFotoAmigo);
 
         btn = findViewById(R.id.btnGuardarAmigo);
-        btn.setOnClickListener(view->guardarAmigo());
+        btn.setOnClickListener(view -> subirFotoFirestore());
 
         fab = findViewById(R.id.fabListaAmigos);
-        fab.setOnClickListener(view->abrirVentana());
+        fab.setOnClickListener(view -> abrirVentana());
+
         mostrarDatos();
         tomarFoto();
+    }
+    private void subirFotoFirestore(){
+        mostrarMsg("Subiendo foto a firestore");
+        StorageReference reference = FirebaseStorage.getInstance().getReference();
+        Uri file = Uri.fromFile(new File(urlCompletaFoto));
+        final StorageReference fileRef = reference.child("fotosAmigos/"+file.getLastPathSegment());
+
+        final UploadTask uploadTask = fileRef.putFile(file);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                getUrlCompletaFotoFirestore = uri.toString();
+                guardarAmigo();
+            }).addOnFailureListener(e -> {
+                mostrarMsg("Error al obtener la url de la foto: "+e.getMessage());
+            });
+        }).addOnFailureListener(e -> {
+            mostrarMsg("Error al subir la foto: "+e.getMessage());
+        });
     }
     private void obtenerToken(){
         try{
@@ -93,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 //idAmigo = ;
             }
         }catch (Exception e){
-            mostrarMsg("Error: "+e.getMessage());
+            mostrarMsg("Error al mostrar datos: "+e.getMessage());
         }
     }
     private void tomarFoto(){
@@ -111,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     mostrarMsg("Nose pudo crear la imagen.");
                 }
             }catch (Exception e){
-                mostrarMsg("Error: "+e.getMessage());
+                mostrarMsg("Error al tomar foto: "+e.getMessage());
             }
         });
     }
@@ -120,15 +139,15 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         try{
             if( requestCode==1 && resultCode==RESULT_OK ){
-                //Bitmap imagenBitmap = BitmapFactory.decodeFile(urlCompletaFoto);
                 img.setImageURI(Uri.parse(urlCompletaFoto));
             }else{
                 mostrarMsg("No se tomo la foto.");
             }
         }catch (Exception e){
-            mostrarMsg("Error: "+e.getMessage());
+            mostrarMsg("Error al tomar la foto: "+e.getMessage());
         }
     }
+
     private File crearImagenAmigo() throws Exception{
         String fechaHoraMs = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()),
                 fileName = "imagen_"+ fechaHoraMs+"_";
@@ -153,35 +172,30 @@ public class MainActivity extends AppCompatActivity {
             String nombre = tempVal.getText().toString();
             tempVal = findViewById(R.id.txtDireccion);
             String direccion = tempVal.getText().toString();
-
             tempVal = findViewById(R.id.txtTelefono);
             String telefono = tempVal.getText().toString();
-
             tempVal = findViewById(R.id.txtEmail);
             String email = tempVal.getText().toString();
-
             tempVal = findViewById(R.id.txtDui);
             String dui = tempVal.getText().toString();
-
             databaseReference = FirebaseDatabase.getInstance().getReference("amigos");
             String key = databaseReference.push().getKey();
-
             if( miToken.equals("") || miToken==null ){
                 obtenerToken();
             }
-            amigos amigo = new amigos(idAmigo, nombre, direccion, telefono, email, dui, urlCompletaFoto, miToken);
+            amigos amigo = new amigos(idAmigo, nombre, direccion, telefono, email, dui, urlCompletaFoto, getUrlCompletaFotoFirestore, miToken);
             if( key!= null ){
                 databaseReference.child(key).setValue(amigo).addOnSuccessListener(success->{
                     mostrarMsg("Registro guardado con exito.");
                     abrirVentana();
                 }).addOnFailureListener(failure->{
-                    mostrarMsg("Error: "+failure.getMessage());
+                    mostrarMsg("Error al registrar datos: "+failure.getMessage());
                 });
             } else {
-                mostrarMsg("Error al guardar el registro.");
+                mostrarMsg("Error al guardar en firebase.");
             }
         }catch (Exception e){
-            mostrarMsg("Error: "+e.getMessage());
+            mostrarMsg("Error guardar: "+e.getMessage());
         }
     }
 }
