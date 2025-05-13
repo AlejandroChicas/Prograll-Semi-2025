@@ -17,10 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -32,9 +29,14 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-@@ -37,20 +43,20 @@ public class lista_amigos extends Activity {
+
+import java.util.ArrayList;
+
+public class lista_amigos extends Activity {
     DB db;
-    final ArrayList<amigos> alAmigos = new ArrayList<amigos>();
+    final ArrayList<amigos> alAmigos = new ArrayList<>(
+
+    );
     final ArrayList<amigos> alAmigosCopia = new ArrayList<amigos>();
     JSONArray jsonArray = new JSONArray();
     JSONObject jsonObject;
@@ -74,7 +76,7 @@ import org.json.JSONObject;
         try{
             if( item.getItemId()==R.id.mnxNuevo){
                 abriVentana();
-            }else if( item.getItemId()==R.id.mnxModificar){
+            }else if( item.getItemId()==R.id.mnxModifica){
                 parametros.putString("accion", "modificar");
                 parametros.putString("amigos", jsonArray.getJSONObject(posicion).getJSONObject("value").toString());
                 abriVentana();
@@ -177,8 +179,8 @@ import org.json.JSONObject;
                             jsonObject.put("email", amigo.getEmail());
                             jsonObject.put("dui", amigo.getDui());
                             jsonObject.put("urlFoto", amigo.getFoto());
+                            jsonObject.put("urlCompletaFotoFirestore", amigo.getUrlCompletaFotoFirestore());
                             jsonObject.put("miToken", amigo.getMiToken());
-
                             jsonArray.put(jsonObject);
                         }
                         mostrarDatosAmigos();
