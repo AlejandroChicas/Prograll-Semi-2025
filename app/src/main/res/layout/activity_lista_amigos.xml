@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".lista_amigos">
-
     <EditText
         android:id="@+id/txtBuscarAmigos"
         android:hint="Buscar amigos"
@@ -15,9 +14,10 @@
 
     <ListView
         android:id="@+id/ltsAmigos"
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/fondo"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAgregarAmigo"
@@ -27,5 +27,4 @@
         android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
 </RelativeLayout>
