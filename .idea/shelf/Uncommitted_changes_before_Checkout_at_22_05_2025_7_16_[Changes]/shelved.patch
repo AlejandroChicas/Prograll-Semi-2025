@@ -1,0 +1,19 @@
+Index: app/src/main/java/com/example/miprimeraaplicacion/utilidades.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.miprimeraaplicacion;\r\n\r\nimport java.util.Base64;\r\n\r\npublic class utilidades {\r\n    static String url_consulta = \"http://192.168.1.5:5984/taskplanner/_design/taskplanner/_view/tareas-view\";\r\n    static String url_mto = \"http://192.168.1.5:5984/taskplanner\";\r\n    static String user = \"admin\";\r\n    static String passwd = \"1234\";\r\n\r\n    static String credencialesCodificadas = Base64.getEncoder().encodeToString((user + \":\" + passwd).getBytes());\r\n\r\n    public String generarUnicoId() {\r\n        return java.util.UUID.randomUUID().toString();\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/miprimeraaplicacion/utilidades.java b/app/src/main/java/com/example/miprimeraaplicacion/utilidades.java
+--- a/app/src/main/java/com/example/miprimeraaplicacion/utilidades.java	(revision c8c9cabd2ac18da1dc3ef8c482d431233fc680a0)
++++ b/app/src/main/java/com/example/miprimeraaplicacion/utilidades.java	(date 1747856605992)
+@@ -3,8 +3,8 @@
+ import java.util.Base64;
+ 
+ public class utilidades {
+-    static String url_consulta = "http://192.168.1.5:5984/taskplanner/_design/taskplanner/_view/tareas-view";
+-    static String url_mto = "http://192.168.1.5:5984/taskplanner";
++    static String url_consulta = "http:// 192.168.1.12:5984/taskplanner/_design/taskplanner/_view/tareas-view";
++    static String url_mto = "http:// 192.168.1.12:5984/taskplanner";
+     static String user = "admin";
+     static String passwd = "1234";
+ 
